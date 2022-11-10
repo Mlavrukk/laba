@@ -25,12 +25,12 @@ def get_page(url):
 
 def main():
     print("heum")
-    if not os.path.isdir("Dataset"):
-        os.mkdir("Dataset")
-        os.chdir("Dataset")
+    if not os.path.exists("C:/Users/marGO.LAPTOP-CEGVK39N/laba/dataset"):
+        os.mkdir("C:/Users/marGO.LAPTOP-CEGVK39N/laba/dataset")
         for i in range(1, 6):
-            if not os.path.isdir(str(i)):
-                os.mkdir(str(i))
+            if not os.path.exists("C:/Users/marGO.LAPTOP-CEGVK39N/laba/dataset"+f"/{i}"):
+                os.mkdir("C:/Users/marGO.LAPTOP-CEGVK39N/laba/dataset"+f"/{i}")
+    
     elem = 0
     page = 0
     quotes_1 = 0
@@ -38,151 +38,98 @@ def main():
     quotes_3 = 0
     quotes_4 = 0
     quotes_5 = 0
-    url = "https://www.livelib.ru/reviews"
+    url = "https://www.livelib.ru/reviews/"
     count = 1
-    reviers = []
+    articles = []
      
-    while  ((quotes_1 != 1000) and (quotes_2 != 1000) and (quotes_3 != 1000) and (quotes_4 != 1000) and (quotes_5 != 1000)):
-        # letters = string.ascii_lowercase
-        # rand_string = ''.join(random.sample(letters, 7))
-        # _headers = {
-        #     "User-Agent": rand_string
-        #     }
-        for i in range(1, 9000):
-            print(f"Страница: {i}")
-            soup = get_page(url + "~" + str(i) + "#reviews")
-            print(soup)    
+    while  ((quotes_1 != 1001) and (quotes_2 != 1001) and (quotes_3 != 1001) and (quotes_4 != 1001) and (quotes_5 != 1001)):
+        for i in tqdm(range(1, 9000), desc="Страница:"):
+            soup = get_page(url + "~" + str(i) + "#reviews")   
             articles = (
                 soup.find("main", class_="main-body page-content")
                 .find("section", class_="lenta__content")
                 .find_all("article", class_="review-card lenta__item")
             )
-            return articles
-        rates = list()
-        names = list()  
-        comments_texts = list()
-        for article in articles:
-            lenta_card = article.find("div", class_="lenta-card")
-            h3 = lenta_card.find("h3", class_="lenta-card__title")
-            rate = h3.find("span", class_="lenta-card__mymark").text.strip()
-            rates.append(rate)
-            lenta_card = article.find("div", class_="lenta-card")
-            lenta_card_book_wrapper = lenta_card.find("div", class_="lenta-card-book__wrapper")
-            name = lenta_card_book_wrapper.find( "a", class_="lenta-card__book-title" ).text.strip()
-            names.append(name)
-            lenta_card = article.find("div", class_="lenta-card")
-            text_without_readmore = lenta_card.find("div", class_="lenta-card__text without-readmore")
-            comment = text_without_readmore.find(id="lenta-card__text-review-escaped").text
-            comments_texts.append(comment)
-        new_rates = []    
-        for rate in rates:
-            new_rates.append(str((rate.text.replace(" ", "")).replace("\n", "")))
-        y = min(len(names), len(comments_texts), len(new_rates))
-    
-
-   
-     
-
-
-
-       
-        # for revier in reviers:
-        #     tutles = revier.find_all(class_ = "lenta-card__book-title")
-        #     authors = revier.find_all(class_ = "lenta-card__author")
-        #     rates = revier.find_all(class_ = "lenta-card__mymark")
-        #     comments = revier.find_all(class_ = "lenta-card__text-review-escaped")
-        #     new_rates = []
-        #     for rate in rates:
-        #         new_rates.append(str((rate.text.replace(" ", "")).replace("\n", "")))
-        #     y = min(len(authors), len(tutles), len(comments), len(new_rates))
-        if y == 0:
-            continue
-        print(y)
-        x = float(new_rates[0])
-        if 4.5 <= x <= 5:
-            quotes_5 = quotes_5 + 1
-            if quotes_5 >= 1000:
-                continue
-            namefile = str(quotes_5).zfill(4)
-            with open("dataset/" + "5" + '/' + namefile + ".txt", "w+", encoding="utf-8") as file:
-                file.write('Оценка: ' + str(x) + '\n' + 'Название: ' + names(0) + '\n' + 'Рецензия:' + '\n' + comments_texts(0))
-            elem = elem + 1
-        elif 3.5 <= x < 4.5:
-            quotes_4 = quotes_4 + 1
-            if quotes_4 >= 1000:
-                continue
-            namefile = str(quotes_4).zfill(4)
-            with open("dataset/" + "4" + '/' + namefile + '.txt', 'w+', encoding="utf-8") as file:
-                    file.write('Оценка: ' + str(x) + '\n' + 'Название: ' + names(0) + '\n' + 'Рецензия:' + '\n' + comments_texts(0))
-            elem = elem + 1
-        elif 2.5 <= x < 3.5:
-            quotes_3 = quotes_3 + 1
-            if quotes_3 >= 1000:
-                continue
-            namefile = str(quotes_3).zfill(4)
-            with open("dataset/" + "3" + '/' + namefile + '.txt', 'w+', encoding="utf-8") as file:
-                file.write('Оценка: ' + str(x) + '\n' + 'Название: ' + names(0) + '\n' + 'Рецензия:' + '\n' + comments_texts(0))
-            elem = elem + 1
-        elif 1.5 <= x < 2.5:
-            quotes_2 = quotes_2 + 1
-            if quotes_2 >= 1000:
-                continue
-            namefile = str(quotes_2).zfill(4)
-            with open("dataset/" + "2" + '/' + namefile + '.txt', 'w+', encoding="utf-8") as file:
-                file.write('Оценка: ' + str(x) + '\n' + 'Название: ' + names(0)  + '\n' + 'Рецензия:' + '\n' + comments_texts(0))
-            elem = elem + 1
-        else:
-            quotes_1 = quotes_1 + 1
-            if quotes_1 >= 1000:
-                continue
-            namefile = str(quotes_1).zfill(4)
-            with open("dataset/" + "1" + '/' + namefile + '.txt', 'w+', encoding="utf-8") as file:
-                file.write('Оценка: ' + str(x) + '\n' + 'Название: ' + names(0) + '\n' + 'Рецензия:' + '\n' + comments_texts(0))
-            elem = elem + 1
-        time.sleep(2)                  
-        # page = page + 1 
-        # url = 'https://www.livelib.ru/reviews' + '~' + str(page) + '#reviews'                    
+            for article in articles:
+                try:
+                    lenta_card = article.find("div", class_="lenta-card")
+                    rates = article.find("span", class_="lenta-card__mymark")
+                except AttributeError as e:
+                    print("Не найдена оценка")    
+                try:
+                    lenta_card = article.find("div", class_="lenta-card")
+                    lenta_card_book_wrapper = lenta_card.find("div", class_="lenta-card-book__wrapper")
+                    names = lenta_card_book_wrapper.find( "a", class_="lenta-card__book-title" )
+                except AttributeError as e:
+                    print("Не найдено название")
+                try:
+                    lenta_card = article.find("div", class_="lenta-card")
+                    text_without_readmore = lenta_card.find("div", class_="lenta-card__text without-readmore")
+                    comments_texts = text_without_readmore.find(id="lenta-card__text-review-escaped")
+                except AttributeError as e:
+                    print("Не найдена рецензия")
+                new_rates = []
+                if rates is not None:
+                    for rate in rates:
+                        new_rates.append(str((rate.text.replace(" ", "")).replace("\n", "")))
+                else:
+                    print("Нет оценки")
+                    continue    
+                try:
+                    y = min(len(names), len(comments_texts), len(new_rates))
+                except Exception as e:
+                    print(e)
+                    pass
+                    continue
+                if y is None or y==0:
+                    continue
+                print(y)
+                x = float(new_rates[0])
+                if 4.5 <= x <= 5:
+                    quotes_5 = quotes_5 + 1
+                    if quotes_5 >= 1000:
+                        continue
+                    namefile = str(quotes_5).zfill(4)
+                    with open(f"dataset/5/{namefile}.txt", "w+", encoding="utf-8") as file:
+                        file.write(f"Оценка:{str(x)}\nНазвание:{names.text}\nРецензия:{comments_texts.text}")
+                    elem = elem + 1
+                elif 3.5 <= x < 4.5:
+                    quotes_4 = quotes_4 + 1
+                    if quotes_4 >= 1000:
+                        continue
+                    namefile = str(quotes_4).zfill(4)
+                    with open(f"dataset/4/{namefile}.txt", "w+", encoding="utf-8") as file:
+                            file.write(f"Оценка:{str(x)}\nНазвание:{names.text}\nРецензия:{comments_texts.text}")
+                    elem = elem + 1
+                elif 2.5 <= x < 3.5:
+                    quotes_3 = quotes_3 + 1
+                    if quotes_3 >= 1000:
+                        continue
+                    namefile = str(quotes_3).zfill(4)
+                    with open(f"dataset/3/{namefile}.txt", 'w+', encoding="utf-8") as file:
+                        file.write(f"Оценка:{str(x)}\nНазвание:{names.text}\nРецензия:{comments_texts.text}")
+                    elem = elem + 1
+                elif 1.5 <= x < 2.5:
+                    quotes_2 = quotes_2 + 1
+                    if quotes_2 >= 1000:
+                        continue
+                    namefile = str(quotes_2).zfill(4)
+                    with open(f"dataset/2/{namefile}.txt", 'w+', encoding="utf-8") as file:
+                        file.write(f"Оценка:{str(x)}\nНазвание:{names.text}\nРецензия:{comments_texts.text}")
+                    elem = elem + 1
+                else:
+                    quotes_1 = quotes_1 + 1
+                    if quotes_1 >= 1000:
+                        continue
+                    namefile = str(quotes_1).zfill(4)
+                    with open(f"dataset/1/{namefile}.txt", 'w+', encoding="utf-8") as file:
+                        file.write(f"Оценка:{str(x)}\nНазвание:{names.text}\nРецензия:{comments_texts.text}")
+                    elem = elem + 1
+                time.sleep(2)                                 
             
 
 if __name__ == "__main__":
-     url = "https://www.livelib.ru/reviews/"
-     least_num_of_marks = 1000 
-     max_num_of_requests = 9000
-     main()           
-#  for revier in reviers:
-#      tutle = revier.find("a", class_="lenta-card__book-title").text
-#      author = revier.find("a", class_="lenta-card__author").text
-#      rate = soup.find("div", class_= "lenta-card__details").find("span", class_="lenta-card__mymark").text
-#      comment = soup.find("div", class_="lenta-card__text-review-full").text
-#      date.append(["tutle", "author", "rate", "comment"])
-#      rates.append(["rate"])
-#      y = min(len(author), len(tutle), len(rate), len(comment))
-
-#      for i in range(y):
-#        rate_number = float(rates[i])
-#        if 4.5 <= rate_number <= 5:
-#         quotes_5 = quotes_5 + 1
-#         namefile = str(quotes_5).zfill(4)
-#         with open("dataset/" + "5" + '/' + namefile + '.txt', 'w+', encoding="utf-8") as f:
-#           f.write(str(rate_number) + '\n' + tutle[i].text + '\n' + author[i].text + '\n' + comment[i].text)
-#         if 3.5 <= rate_number <= 4:
-#           quotes_4 = quotes_4 + 1
-#           namefile = str(quotes_4).zfill(4)
-#           with open("dataset/" + "4" + '/' + namefile + '.txt', 'w+', encoding="utf-8") as file:
-#            f.write(str(rate_number) + '\n' + tutle[i].text + '\n' + author[i].text + '\n' + comment[i].text)
-#         if 2.5 <= rate_number <= 3:
-#           quotes_3 = quotes_3 + 1
-#           namefile = str(quotes_3).zfill(4)
-#           with open("dataset/" + "3" + '/' + namefile + '.txt', 'w+', encoding="utf-8") as file:
-#            f.write(str(rate_number) + '\n' + tutle[i].text + '\n' + author[i].text + '\n' + comment[i].text)
-#         if 1.5 <= rate_number <= 2:
-#           quotes_2 = quotes_2 + 1
-#           namefile = str(quotes_2).zfill(4)
-#           with open("dataset/" + "2" + '/' + namefile + '.txt', 'w+', encoding="utf-8") as file:
-#            f.write(str(rate_number) + '\n' + tutle[i].text + '\n' + author[i].text + '\n' + comment[i].text)
-#         if 0.5 <= rate_number <= 1:
-#           quotes_1 = quotes_1 + 1
-#           namefile = str(quotes_1).zfill(4)
-#           with open("dataset/" + "1" + '/' + namefile + '.txt', 'w+', encoding="utf-8") as file:
-#            f.write(str(rate_number) + '\n' + tutle[i].text + '\n' + author[i].text + '\n' + comment[i].text)
-     
+    url = "https://www.livelib.ru/reviews/"
+    least_num_of_marks = 1000 
+    max_num_of_requests = 9000
+    main()           
