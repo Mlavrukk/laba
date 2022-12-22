@@ -3,19 +3,18 @@ import os
 import pathlib
 from random import Random, random
 
-
 class Article:
 
-    def __init__(self):  # по умолчанию
+    def __init__(self): 
         self.name = None
         self.comment_text = None
         self.rate = None
 
 
 def create_repo():
-    os.mkdir("dataset_copy")
-    for i in range(1, 6):
-        os.mkdir("dataset_copy/"+str(i))
+    if not os.path.isdir("dataset_copy"):
+        os.mkdir("dataset_copy")
+
 
 
 def save_comments(data, filename):
@@ -39,21 +38,26 @@ def save_comments(data, filename):
 
 
 def write_dataset(dataset):
+    """
+
+    Args:
+        dataset (_type_): _description_
+    """
 
     one_data = [el for el in dataset if el.mark < 2.0]
-    save_comments(one_data, "dataset_copy/1")
+    save_comments(one_data, "dataset_copy")
 
     two_data = [el for el in dataset if el.mark < 3.0 and el.mark >= 2.0]
-    save_comments(two_data, "dataset_copy/2")
+    save_comments(two_data, "dataset_copy")
 
     three_data = [el for el in dataset if el.mark < 4.0 and el.mark >= 3.0]
-    save_comments(three_data, "dataset_copy/3")
+    save_comments(three_data, "dataset_copy")
 
     four_data = [el for el in dataset if el.mark < 5.0 and el.mark >= 4.0]
-    save_comments(four_data, "dataset_copy/4")
+    save_comments(four_data, "dataset_copy")
 
     five_data = [el for el in dataset if el.mark == 5.0]
-    save_comments(five_data, "dataset_copy/5")
+    save_comments(five_data, "dataset_copy")
 
 
 def create_copy(path):
@@ -117,7 +121,7 @@ def get_paths_to_files(path_dataset):
     for folder_num in range(1, 6):
         folder_path = path_dataset+'/'+str(folder_num)
 
-        currentDirectory = pathlib.Path('./dataset_copy'+f'/{folder_num}')
+        currentDirectory = pathlib.Path('./dataset_copy')
         for currentFile in currentDirectory.iterdir():
             print(currentFile)
             paths_files.append(currentFile)

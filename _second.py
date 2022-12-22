@@ -10,7 +10,7 @@ def write_to_file(path_dataset, paths_files):
         csv_file.writerow(["Absolute path", "Relative path", "Class"])
 
         for path in paths_files:
-            path = path[0:2] + '_' + path[3:] #raplce / with _
+            path = path[0:2] + '_' + path[3:]
             csv_file.writerow([f'{path_dataset+path}',
                               f'dataset{path}', f'{path[1]}'])
 
